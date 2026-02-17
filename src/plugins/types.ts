@@ -1,6 +1,6 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { Command } from "commander";
-import type { IncomingMessage, ServerResponse } from "node:http";
 import type { AuthProfileCredential, OAuthCredential } from "../agents/auth-profiles/types.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import type { ReplyPayload } from "../auto-reply/types.js";
@@ -502,7 +502,7 @@ export type PluginHookBeforeMessageWriteEvent = {
 };
 
 export type PluginHookBeforeMessageWriteResult = {
-  block?: boolean;      // If true, message is NOT written to JSONL
+  block?: boolean; // If true, message is NOT written to JSONL
   message?: AgentMessage; // Optional: modified message to write instead
 };
 

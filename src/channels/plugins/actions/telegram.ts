@@ -1,5 +1,3 @@
-import type { TelegramActionConfig } from "../../../config/types.telegram.js";
-import type { ChannelMessageActionAdapter, ChannelMessageActionName } from "../types.js";
 import {
   createActionGate,
   readNumberParam,
@@ -8,9 +6,11 @@ import {
   readStringParam,
 } from "../../../agents/tools/common.js";
 import { handleTelegramAction } from "../../../agents/tools/telegram-actions.js";
+import type { TelegramActionConfig } from "../../../config/types.telegram.js";
 import { extractToolSend } from "../../../plugin-sdk/tool-send.js";
 import { listEnabledTelegramAccounts } from "../../../telegram/accounts.js";
 import { isTelegramInlineButtonsEnabled } from "../../../telegram/inline-buttons.js";
+import type { ChannelMessageActionAdapter, ChannelMessageActionName } from "../types.js";
 
 const providerId = "telegram";
 
@@ -229,31 +229,6 @@ export const telegramMessageActions: ChannelMessageActionAdapter = {
           action: "searchSticker",
           query,
           limit: limit ?? undefined,
-          accountId: accountId ?? undefined,
-        },
-        cfg,
-      );
-    }
-
-    if (action === "poll") {
-      const to = readStringParam(params, "to", { required: true });
-      const question =
-        readStringParam(params, "pollQuestion") ??
-        readStringParam(params, "question", { required: true });
-      const options =
-        readStringArrayParam(params, "pollOption") ?? readStringArrayParam(params, "options");
-      const threadId = readStringParam(params, "threadId");
-      const replyTo = readStringParam(params, "replyTo");
-      const silent = typeof params.silent === "boolean" ? params.silent : undefined;
-      return await handleTelegramAction(
-        {
-          action: "sendPoll",
-          to,
-          question,
-          options,
-          replyTo: replyTo != null ? Number(replyTo) : undefined,
-          threadId: threadId != null ? Number(threadId) : undefined,
-          silent,
           accountId: accountId ?? undefined,
         },
         cfg,

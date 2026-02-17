@@ -1,8 +1,11 @@
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { whatsappPlugin } from "./channel.js";
 
 // Mock runtime
-const mockSendMessageWhatsApp = vi.fn().mockResolvedValue({ messageId: "123", toJid: "123@s.whatsapp.net" });
+const mockSendMessageWhatsApp = vi
+  .fn()
+  .mockResolvedValue({ messageId: "123", toJid: "123@s.whatsapp.net" });
 
 vi.mock("./runtime.js", () => ({
   getWhatsAppRuntime: () => ({
@@ -23,7 +26,8 @@ describe("whatsappPlugin.outbound.sendText", () => {
   });
 
   it("passes linkPreview option to sendMessageWhatsApp", async () => {
-    await whatsappPlugin.outbound.sendText({
+    await whatsappPlugin.outbound!.sendText!({
+      cfg: {} as OpenClawConfig,
       to: "1234567890",
       text: "http://example.com",
       // @ts-expect-error - injecting extra param as per runtime behavior
@@ -35,12 +39,13 @@ describe("whatsappPlugin.outbound.sendText", () => {
       "http://example.com",
       expect.objectContaining({
         linkPreview: false,
-      })
+      }),
     );
   });
 
   it("passes linkPreview=undefined when omitted", async () => {
-    await whatsappPlugin.outbound.sendText({
+    await whatsappPlugin.outbound!.sendText!({
+      cfg: {} as OpenClawConfig,
       to: "1234567890",
       text: "hello",
     });
@@ -50,7 +55,7 @@ describe("whatsappPlugin.outbound.sendText", () => {
       "hello",
       expect.objectContaining({
         linkPreview: undefined,
-      })
+      }),
     );
   });
 });

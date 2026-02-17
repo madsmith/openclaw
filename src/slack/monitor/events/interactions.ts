@@ -1,8 +1,8 @@
 import type { SlackActionMiddlewareArgs } from "@slack/bolt";
 import type { Block, KnownBlock } from "@slack/web-api";
-import type { SlackMonitorContext } from "../context.js";
 import { enqueueSystemEvent } from "../../../infra/system-events.js";
 import { parseSlackModalPrivateMetadata } from "../../modal-metadata.js";
+import type { SlackMonitorContext } from "../context.js";
 
 // Prefix for OpenClaw-generated action IDs to scope our handler
 const OPENCLAW_ACTION_PREFIX = "openclaw:";
@@ -18,11 +18,9 @@ type SelectOption = {
   text?: { text?: string };
 };
 
-type InteractionSummary = {
-  interactionType?: "block_action" | "view_submission" | "view_closed";
-  actionId: string;
-  blockId?: string;
+type InteractionSelectionFields = {
   actionType?: string;
+  blockId?: string;
   inputKind?: "text" | "number" | "email" | "url" | "rich_text";
   value?: string;
   selectedValues?: string[];
@@ -39,6 +37,11 @@ type InteractionSummary = {
   inputUrl?: string;
   richTextValue?: unknown;
   richTextPreview?: string;
+};
+
+type InteractionSummary = InteractionSelectionFields & {
+  interactionType?: "block_action" | "view_submission" | "view_closed";
+  actionId: string;
   userId?: string;
   teamId?: string;
   triggerId?: string;
@@ -50,26 +53,9 @@ type InteractionSummary = {
   threadTs?: string;
 };
 
-type ModalInputSummary = {
+type ModalInputSummary = InteractionSelectionFields & {
   blockId: string;
   actionId: string;
-  actionType?: string;
-  inputKind?: "text" | "number" | "email" | "url" | "rich_text";
-  value?: string;
-  selectedValues?: string[];
-  selectedUsers?: string[];
-  selectedChannels?: string[];
-  selectedConversations?: string[];
-  selectedLabels?: string[];
-  selectedDate?: string;
-  selectedTime?: string;
-  selectedDateTime?: number;
-  inputValue?: string;
-  inputNumber?: number;
-  inputEmail?: string;
-  inputUrl?: string;
-  richTextValue?: unknown;
-  richTextPreview?: string;
 };
 
 function readOptionValues(options: unknown): string[] | undefined {
